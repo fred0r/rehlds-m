@@ -81,6 +81,9 @@ add_compile_options(
   # UndefinedBehaviorSanitizer
   $<$<BOOL:${ENABLE_UBSAN}>:-fsanitize=undefined>
 
+  # Tell assembler to mark object files as not needing executable stack
+  -Wa,--noexecstack
+
   # Enable/Disable RTTI support
   $<$<COMPILE_LANGUAGE:CXX>:$<IF:$<BOOL:${ENABLE_RTTI}>,-frtti,-fno-rtti>>
 
@@ -97,6 +100,9 @@ add_link_options(
   -Wl,--as-needed     # Only link libraries as needed
   -Wl,--gc-sections   # Perform garbage collection of unused input sections
   -Wl,--no-undefined  # Do not allow undefined symbols
+
+  # Mark the final binary as not needing executable stack
+  -Wl,-z,noexecstack
 
   # Detailed output of the linking process
   $<$<BOOL:${ENABLE_LINK_TRACE}>:-Wl,--trace>

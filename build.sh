@@ -23,14 +23,14 @@ ACTION="build"
 
 # Detect OS and set default preset
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    DEFAULT_PRESET="ninja-gcc-linux"
-    TEST_PRESET="ninja-gcc-linux"
+    DEFAULT_PRESET="ninja-clang-linux"
+    TEST_PRESET="ninja-clang-linux"
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     DEFAULT_PRESET="ninja-msvc-windows"
     TEST_PRESET="ninja-msvc-windows"
 else
-    DEFAULT_PRESET="ninja-gcc-linux"
-    TEST_PRESET="ninja-gcc-linux"
+    DEFAULT_PRESET="ninja-clang-linux"
+    TEST_PRESET="ninja-clang-linux"
 fi
 
 PRESET="$DEFAULT_PRESET"
@@ -52,7 +52,7 @@ OPTIONS:
   --release   Build in Release mode (default)
   --debug     Build in Debug mode
   --preset PRESET
-              Use specific CMake preset (e.g., ninja-gcc-linux, ninja-msvc-windows)
+              Use specific CMake preset (e.g., ninja-clang-linux, ninja-gcc-linux, ninja-msvc-windows)
   --tests     Include unit tests in build
   --run-tests Run tests after building
   --jobs N    Number of parallel build jobs (default: auto-detect)
@@ -170,6 +170,7 @@ configure_project() {
 
     if [[ $BUILD_TESTS -eq 1 ]]; then
         # Modify preset name to include unittest variant
+        config_preset="${config_preset/ninja-clang-linux/unittest-ninja-gcc-linux}"
         config_preset="${config_preset/ninja-gcc-linux/unittest-ninja-gcc-linux}"
         config_preset="${config_preset/ninja-msvc-windows/unittest-ninja-msvc-windows}"
     fi
@@ -184,6 +185,7 @@ build_project() {
     local jobs=$3
 
     if [[ $BUILD_TESTS -eq 1 ]]; then
+        config_preset="${config_preset/ninja-clang-linux/unittest-ninja-gcc-linux}"
         config_preset="${config_preset/ninja-gcc-linux/unittest-ninja-gcc-linux}"
         config_preset="${config_preset/ninja-msvc-windows/unittest-ninja-msvc-windows}"
     fi
@@ -197,6 +199,7 @@ run_unit_tests() {
     local test_preset=$1
     local jobs=$2
 
+    test_preset="${test_preset/ninja-clang-linux/ninja-clang-linux}"
     test_preset="${test_preset/ninja-gcc-linux/ninja-gcc-linux}"
     test_preset="${test_preset/ninja-msvc-windows/ninja-msvc-windows}"
 
