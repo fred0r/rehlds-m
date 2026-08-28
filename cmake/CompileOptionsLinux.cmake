@@ -107,9 +107,6 @@ add_link_options(
   # Compress debug sections using zlib
   $<$<CONFIG:RelWithDebInfo>:-Wl,--compress-debug-sections=zlib>
 
-  # Strip all symbols
-  $<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>>:-Wl,--strip-all>
-
   # Discard all local symbols
   $<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>,$<CONFIG:RelWithDebInfo>>:-Wl,--discard-all>
 
